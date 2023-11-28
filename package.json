@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "npm run build:frontend",
+    "build:backend": "tsc",
     "build:frontend": "tsc -p frontend/tsconfig.json && vite build",
     "preview": "vite preview"
   },
