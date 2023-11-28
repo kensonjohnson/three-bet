@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "nodemon",
     "dev:frontend": "vite",
     "build": "npm run build:frontend",
@@ -14,6 +15,7 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.10.0",
+    "concurrently": "^8.2.2",
     "glob": "^10.3.10",
     "nodemon": "^3.0.1",
     "typescript": "^5.2.2",
