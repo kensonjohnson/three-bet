@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "glob": "^10.3.10",
     "typescript": "^5.2.2",
     "vite": "^5.0.0"
   }
