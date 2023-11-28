@@ -9,15 +9,18 @@
     "dev:frontend": "vite",
     "build": "npm run build:backend && npm run build:frontend",
     "build:backend": "tsc",
-    "build:frontend": "tsc -p frontend/tsconfig.json && vite build"
+    "build:frontend": "tsc -p frontend/tsconfig.json && vite build",
+    "lint": "eslint src/ frontend/"
   },
   "devDependencies": {
+    "@types/eslint": "^8.44.7",
     "@types/express": "^4.17.21",
     "@types/node": "^20.10.0",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
     "concurrently": "^8.2.2",
     "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
     "glob": "^10.3.10",
     "nodemon": "^3.0.1",
     "typescript": "^5.2.2",
