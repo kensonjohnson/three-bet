@@ -77,3 +77,7 @@ This command will build the backend code only, outputting files to the build fol
 ### `npm run build:frontend`
 
 This command will build the frontend code only, outputting the static files to `build/frontend`.
+
+### `npm run lint`
+
+This command will run eslint on both `src/` and `frontend/` directories.
