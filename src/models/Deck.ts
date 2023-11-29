@@ -30,7 +30,7 @@ export class Deck {
     return this.cards.length;
   }
 
-  //precache all of the images for the deck. doesn't work in every browser
+  // Precache all of the images for the deck. doesn't work in every browser
   preloadImages() {
     let precacheImages: string[] = [];
     SUITS.forEach((suit) => {
@@ -46,54 +46,68 @@ export class Deck {
   // we will create our own random sorting algorithm
   shuffle() {
     for (let i = this.numberOfCards - 1; i > 0; i--) {
-      // starting at the top of the deck, look for any card less than the current index.
+      // Starting at the top of the deck, look for any card less than the current index.
       const newIndex = Math.floor(Math.random() * (i + 1));
-      // save what that card value was:
+      // Save what that card value was:
       const oldValue = this.cards[newIndex];
-      // then swap the values:
+      // Then swap the values:
       this.cards[newIndex] = this.cards[i];
       this.cards[i] = oldValue;
     }
   }
 
-  dealThreeCards() {
+  burnOneCard() {
     // Guard against dealing more cards than are in the deck
-    if (this.cards.length < 4) {
-      return null;
-    }
-    // burn a card
-    this.disardPile.push(this.cards.shift()!);
-
-    // send three cards to the table and remove them from the deck
-    let tableCards = this.cards.splice(0, 3);
-
-    return tableCards;
-  }
-
-  dealTwoCards() {
-    // Guard against dealing more cards than are in the deck
-    if (this.cards.length < 3) {
-      return null;
+    if (this.cards.length < 1) {
+      return false;
     }
 
-    // burn a card
+    // Burn a card
     this.disardPile.push(this.cards.shift()!);
-
-    // deal two cards, face up
-    let playerCards = this.cards.splice(0, 2);
-    return playerCards;
+    return true;
   }
 
   dealOneCard() {
+    // Guard against dealing more cards than are in the deck
+    if (this.cards.length < 1) {
+      return null;
+    }
+
+    // Return one card, removing it from the deck
+    return this.cards.shift();
+  }
+
+  dealTwoCards() {
     // Guard against dealing more cards than are in the deck
     if (this.cards.length < 2) {
       return null;
     }
 
-    // burn a card
+    // Burn a card
     this.disardPile.push(this.cards.shift()!);
 
-    return this.cards.shift();
+    // Return two cards, removing them from the deck
+    return this.cards.splice(0, 2);
+  }
+
+  dealThreeCards() {
+    // Guard against dealing more cards than are in the deck
+    if (this.cards.length < 3) {
+      return null;
+    }
+
+    // Return three cards, removing them from the deck
+    return this.cards.splice(0, 3);
+  }
+
+  dealManyCards(numberOfCards: number) {
+    // Guard against dealing more cards than are in the deck
+    if (this.cards.length < numberOfCards) {
+      return null;
+    }
+
+    // Return numberOfCards cards, removing them from the deck
+    return this.cards.splice(0, numberOfCards);
   }
 }
 
