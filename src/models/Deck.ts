@@ -20,10 +20,10 @@ const FACE_VALUES: FaceValue[] = [
 
 export class Deck {
   cards: Card[];
-  disardPile: Card[];
+  discardPile: Card[];
   constructor() {
     this.cards = freshDeck();
-    this.disardPile = [];
+    this.discardPile = [];
   }
 
   get numberOfCards() {
@@ -63,7 +63,7 @@ export class Deck {
     }
 
     // Burn a card
-    this.disardPile.push(this.cards.shift()!);
+    this.discardPile.push(this.cards.shift()!);
     return true;
   }
 
@@ -82,9 +82,6 @@ export class Deck {
     if (this.cards.length < 2) {
       return null;
     }
-
-    // Burn a card
-    this.disardPile.push(this.cards.shift()!);
 
     // Return two cards, removing them from the deck
     return this.cards.splice(0, 2);

@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 build
+coverage
 *.local
 
 # Editor directories and files
