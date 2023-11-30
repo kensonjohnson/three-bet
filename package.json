@@ -5,13 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:report": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run test:watch:report\"",
     "dev:backend": "npm run build:frontend && NODE_ENV=dev nodemon",
     "dev:frontend": "vite",
     "build": "npm run build:backend && npm run build:frontend",
     "build:backend": "tsc",
     "build:frontend": "tsc -p frontend/tsconfig.json && vite build",
     "lint": "eslint src/ frontend/",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:watch:report": "jest --watch --coverage >/dev/null 2>&1",
+    "test:verbose": "jest --verbose",
+    "test:coverage": "jest --coverage"
   },
   "devDependencies": {
     "@types/eslint": "^8.44.7",
