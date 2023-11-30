@@ -5,4 +5,5 @@ module.exports = {
   moduleNameMapper: {
     "^(\\.\\.?\\/.+)\\.js?$": "$1",
   },
+  testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/build/"],
 };
