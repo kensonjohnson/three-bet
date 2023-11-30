@@ -1,6 +1,6 @@
 import { Card } from "./Card.js";
 
-describe("Card", () => {
+describe("Card Model", () => {
   const card1 = new Card("S", "A");
   const card2 = new Card("D", "6");
 
