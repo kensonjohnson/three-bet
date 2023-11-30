@@ -4,6 +4,6 @@ export function helloController(_: Request, res: Response) {
   res.json({ serverMessage: getHello() });
 }
 
-function getHello() {
+export function getHello() {
   return "Hello World!";
 }
