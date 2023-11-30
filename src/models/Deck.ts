@@ -1,5 +1,5 @@
-import { Card } from "./Card";
-import type { FaceValue, Suit } from "./Card";
+import { Card } from "./Card.js";
+import type { FaceValue, Suit } from "./Card.js";
 
 const SUITS: Suit[] = ["S", "C", "D", "H"];
 const FACE_VALUES: FaceValue[] = [
