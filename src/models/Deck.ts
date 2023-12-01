@@ -30,10 +30,6 @@ export class Deck {
     return this.cards.length;
   }
 
-  get discardPileSize() {
-    return this.discardPile.length;
-  }
-
   // Precache all of the images for the deck. doesn't work in every browser
   preloadImages() {
     const precacheImages: string[] = [];
@@ -62,7 +58,7 @@ export class Deck {
 
   burnOneCard() {
     // Guard against dealing more cards than are in the deck
-    if (this.cards.length < 1) {
+    if (this.deckSize < 1) {
       return false;
     }
 
@@ -73,7 +69,7 @@ export class Deck {
 
   dealOneCard() {
     // Guard against dealing more cards than are in the deck
-    if (this.cards.length < 1) {
+    if (this.deckSize < 1) {
       return null;
     }
 
@@ -83,7 +79,7 @@ export class Deck {
 
   dealTwoCards() {
     // Guard against dealing more cards than are in the deck
-    if (this.cards.length < 2) {
+    if (this.deckSize < 2) {
       return null;
     }
 
@@ -93,7 +89,7 @@ export class Deck {
 
   dealThreeCards() {
     // Guard against dealing more cards than are in the deck
-    if (this.cards.length < 3) {
+    if (this.deckSize < 3) {
       return null;
     }
 
@@ -103,7 +99,7 @@ export class Deck {
 
   dealManyCards(numberOfCards: number) {
     // Guard against dealing more cards than are in the deck
-    if (this.cards.length < numberOfCards) {
+    if (this.deckSize < numberOfCards) {
       return null;
     }
 
