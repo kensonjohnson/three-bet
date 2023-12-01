@@ -26,6 +26,7 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["@typescript-eslint"],
+  ignorePatterns: ["**/*.test.ts"],
   rules: {
     "no-unused-vars": 1,
   },
