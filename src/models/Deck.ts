@@ -19,20 +19,20 @@ const FACE_VALUES: FaceValue[] = [
 ];
 
 export class Deck {
-  cards: Card[];
-  discardPile: Card[];
+  private cards: Card[];
+  private discardPile: Card[];
   constructor() {
     this.cards = freshDeck();
     this.discardPile = [];
   }
 
-  get numberOfCards() {
+  get size() {
     return this.cards.length;
   }
 
   // Precache all of the images for the deck. doesn't work in every browser
   preloadImages() {
-    const precacheImages: string[] = [];
+    let precacheImages: string[] = [];
     SUITS.forEach((suit) => {
       FACE_VALUES.forEach((value) => {
         const img = (new Image().src = `images/${value}${suit}.svg`);
@@ -45,7 +45,7 @@ export class Deck {
   // rather than use Array.sort(), which is predictable even when using Math.random(),
   // we will create our own random sorting algorithm
   shuffle() {
-    for (let i = this.numberOfCards - 1; i > 0; i--) {
+    for (let i = this.size - 1; i > 0; i--) {
       // Starting at the top of the deck, look for any card less than the current index.
       const newIndex = Math.floor(Math.random() * (i + 1));
       // Save what that card value was:
@@ -105,6 +105,9 @@ export class Deck {
 
     // Return numberOfCards cards, removing them from the deck
     return this.cards.splice(0, numberOfCards);
+  }
+  refreshDeck() {
+    this.cards = freshDeck();
   }
 }
 
