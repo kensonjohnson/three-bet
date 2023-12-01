@@ -4,7 +4,7 @@ on:
     branches: ["main"]
 
 jobs:
-  Lint:
+  CI:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,5 +23,5 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Test
+      - name: Unit Test
         run: npm run test
