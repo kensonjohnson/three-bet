@@ -32,7 +32,7 @@ export class Deck {
 
   // Precache all of the images for the deck. doesn't work in every browser
   preloadImages() {
-    let precacheImages: string[] = [];
+    const precacheImages: string[] = [];
     SUITS.forEach((suit) => {
       FACE_VALUES.forEach((value) => {
         const img = (new Image().src = `images/${value}${suit}.svg`);
