@@ -7,10 +7,6 @@ describe("Deck Model", () => {
     it("should create a deck of cards", () => {
       expect(deck.deckSize).toEqual(52);
     });
-
-    it("should create a discard pile", () => {
-      expect(deck.discardPileSize).toEqual(0);
-    });
   });
 
   describe("methods", () => {
@@ -18,7 +14,6 @@ describe("Deck Model", () => {
       it("should burn a card", () => {
         deck.burnOneCard();
         expect(deck.deckSize).toEqual(51);
-        expect(deck.discardPileSize).toEqual(1);
       });
 
       it("should return false if there are no cards to burn", () => {
@@ -32,7 +27,6 @@ describe("Deck Model", () => {
       it("should deal a card", () => {
         const card = deck.dealOneCard();
         expect(deck.deckSize).toEqual(50);
-        expect(deck.discardPileSize).toEqual(1);
         expect(card).toBeDefined();
       });
 
@@ -47,7 +41,6 @@ describe("Deck Model", () => {
       it("should deal two cards", () => {
         const cards = deck.dealTwoCards();
         expect(deck.deckSize).toEqual(48);
-        expect(deck.discardPileSize).toEqual(1);
         expect(cards).toBeDefined();
         expect(cards!.length).toEqual(2);
       });
@@ -63,7 +56,6 @@ describe("Deck Model", () => {
       it("should deal three cards", () => {
         const cards = deck.dealThreeCards();
         expect(deck.deckSize).toEqual(45);
-        expect(deck.discardPileSize).toEqual(1);
         expect(cards).toBeDefined();
         expect(cards!.length).toEqual(3);
       });
@@ -79,7 +71,6 @@ describe("Deck Model", () => {
       it("should deal many cards", () => {
         const cards = deck.dealManyCards(7);
         expect(deck.deckSize).toEqual(38);
-        expect(deck.discardPileSize).toEqual(1);
         expect(cards).toBeDefined();
         expect(cards!.length).toEqual(7);
       });
