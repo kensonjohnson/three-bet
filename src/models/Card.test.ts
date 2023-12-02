@@ -19,25 +19,5 @@ describe("Card Model", () => {
       expect(card1.numericValue).toEqual(14);
       expect(card2.numericValue).toEqual(6);
     });
-
-    it("should set imagePath", () => {
-      expect(card1.imagePath).toEqual("images/AS.svg");
-      expect(card2.imagePath).toEqual("images/6D.svg");
-    });
-
-    it("should set cardBackImagePath", () => {
-      expect(card1.cardBackImagePath).toEqual("images/B.svg");
-      expect(card2.cardBackImagePath).toEqual("images/B.svg");
-    });
-
-    it("should set faceUp", () => {
-      expect(card1.faceUp).toEqual(false);
-      expect(card2.faceUp).toEqual(false);
-    });
-
-    it("should set winningCard", () => {
-      expect(card1.winningCard).toEqual(false);
-      expect(card2.winningCard).toEqual(false);
-    });
   });
 });

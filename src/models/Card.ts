@@ -21,18 +21,10 @@ export class Card {
   suit: Suit;
   faceValue: FaceValue;
   numericValue: number;
-  imagePath: string;
-  cardBackImagePath: string;
-  faceUp: boolean;
-  winningCard: boolean;
 
   constructor(suit: Suit, faceValue: FaceValue) {
     this.suit = suit;
     this.faceValue = faceValue;
     this.numericValue = NUMERIC_VALUE_MAP[faceValue];
-    this.imagePath = `images/${faceValue}${suit}.svg`;
-    this.cardBackImagePath = "images/B.svg";
-    this.faceUp = false;
-    this.winningCard = false;
   }
 }
