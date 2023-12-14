@@ -11,7 +11,7 @@ class HandData {
   seqCountMax: number;
   maxCardValue: number;
   seqMaxValue: number;
-  duplicates: any;
+  duplicates: { duplicateCount: number; cardValue: number }[];
   sortedSpades: Card[];
   sortedClubs: Card[];
   sortedDiamonds: Card[];
@@ -101,9 +101,9 @@ export function checkPlayerHand(playerCards: Card[], tableCards: Card[]) {
   }
 
   // No valid hands, so we play High Card
-  let handName = "High Card";
-  let score = evaluateRankByHighestCards(handData.sortedCards);
-  let hand = handData.sortedCards.slice(-5);
+  const handName = "High Card";
+  const score = evaluateRankByHighestCards(handData.sortedCards);
+  const hand = handData.sortedCards.slice(-5);
   return { handName, score, hand };
 }
 
@@ -120,7 +120,7 @@ function evaluateRankByHighestCards(
   let sum = 0;
   let passes = 0;
   for (let i = arrayOfCards.length - 1; i >= 0; i--) {
-    let cardValue = arrayOfCards[i].numericValue;
+    const cardValue = arrayOfCards[i].numericValue;
     if (cardValue == excludedCard1 || cardValue == excludedCard2) {
       continue;
     }
@@ -146,8 +146,8 @@ export function analyzeHand(playerCards: Card[], tableCards: Card[]) {
   let seqMaxValue = -1;
   let cardValue = -1;
   let nextCardValue = -1;
-  let duplicates = [];
-  let sortedCards = playerCards.concat(tableCards).sort((a, b) => {
+  const duplicates = [];
+  const sortedCards = playerCards.concat(tableCards).sort((a, b) => {
     return a.numericValue - b.numericValue;
   });
 
@@ -206,19 +206,19 @@ export function analyzeHand(playerCards: Card[], tableCards: Card[]) {
     return b.duplicateCount - a.duplicateCount;
   });
 
-  let sortedSpades = sortedCards.filter((card) => {
+  const sortedSpades = sortedCards.filter((card) => {
     if (card.suit === SPADES) return true;
   });
 
-  let sortedClubs = sortedCards.filter((card) => {
+  const sortedClubs = sortedCards.filter((card) => {
     if (card.suit === CLUBS) return true;
   });
 
-  let sortedDiamonds = sortedCards.filter((card) => {
+  const sortedDiamonds = sortedCards.filter((card) => {
     if (card.suit === DIAMONDS) return true;
   });
 
-  let sortedHearts = sortedCards.filter((card) => {
+  const sortedHearts = sortedCards.filter((card) => {
     if (card.suit === HEARTS) return true;
   });
 
@@ -281,7 +281,7 @@ export function checkStraightFlush(handData: HandData) {
 
   for (const suit of suits) {
     if (suit.length < 5) continue;
-    let results = straightFlushHelper(suit);
+    const results = straightFlushHelper(suit);
     if (results != null) {
       return {
         handName: "Straight Flush",
@@ -314,7 +314,7 @@ export function straightFlushHelper(suitedCards: Card[]) {
     }
   }
   if (counterMax > 4) {
-    let hand = suitedCards.filter((card) => {
+    const hand = suitedCards.filter((card) => {
       if (card.numericValue === highestValue) return true;
       if (card.numericValue === highestValue - 1) return true;
       if (card.numericValue === highestValue - 2) return true;
@@ -331,7 +331,7 @@ export function straightFlushHelper(suitedCards: Card[]) {
     highestValue === 5 &&
     suitedCards[suitedCards.length - 1].numericValue === 14
   ) {
-    let hand = suitedCards
+    const hand = suitedCards
       .slice(0, 4)
       .concat(suitedCards[suitedCards.length - 1]);
     return { highestValue, hand };
@@ -344,8 +344,8 @@ export function checkFourOfAKind(handData: HandData) {
     handData.duplicates.length > 0 &&
     handData.duplicates[0].duplicateCount === 4
   ) {
-    let handName = "Four of a Kind";
-    let score =
+    const handName = "Four of a Kind";
+    const score =
       700 +
       handData.duplicates[0].cardValue * 7 * 0.95 + // weighted at 95%
       evaluateRankByHighestCards(
@@ -356,12 +356,12 @@ export function checkFourOfAKind(handData: HandData) {
       ) *
         0.05; // weighted at 5%
 
-    let highCard = handData.sortedCards
+    const highCard = handData.sortedCards
       .filter((card) => {
         if (card.numericValue != handData.duplicates[0].cardValue) return true;
       })
       .slice(-1);
-    let hand = handData.sortedCards
+    const hand = handData.sortedCards
       .filter((card) => {
         if (card.numericValue === handData.duplicates[0].cardValue) return true;
       })
@@ -377,26 +377,26 @@ export function checkFullHouse(handData: HandData) {
     handData.duplicates[0].duplicateCount === 3 &&
     handData.duplicates[1].duplicateCount >= 2
   ) {
-    let handName = "Full House";
+    const handName = "Full House";
 
-    let score =
+    const score =
       600 +
       handData.duplicates[0].cardValue * 7 * 0.95 + // weighted at 95%
       handData.duplicates[1].cardValue * 7 * 0.05; // weighted at 5%
 
-    let tempTriple = handData.sortedCards.filter((card) => {
+    const tempTriple = handData.sortedCards.filter((card) => {
       if (card.numericValue === handData.duplicates[0].cardValue) {
         return true;
       }
     });
 
-    let tempPair = handData.sortedCards.filter((card) => {
+    const tempPair = handData.sortedCards.filter((card) => {
       if (card.numericValue === handData.duplicates[1].cardValue) {
         return true;
       }
     });
 
-    let hand = tempTriple.concat(tempPair.slice(-2));
+    const hand = tempTriple.concat(tempPair.slice(-2));
 
     return { handName, score, hand };
   }
@@ -413,9 +413,9 @@ export function checkFlush(handData: HandData) {
 
   for (const suit of suits) {
     if (suit.length > 4) {
-      let handName = "Flush";
-      let score = 500 + evaluateRankByHighestCards(suit);
-      let hand = suit.slice(-5);
+      const handName = "Flush";
+      const score = 500 + evaluateRankByHighestCards(suit);
+      const hand = suit.slice(-5);
       return { handName, score, hand };
     }
   }
@@ -424,9 +424,9 @@ export function checkFlush(handData: HandData) {
 
 export function checkStraight(handData: HandData) {
   if (handData.seqCountMax >= 5) {
-    let handName = "Straight";
-    let score = 400 + (handData.seqMaxValue / 14) * 99;
-    let hand = handData.sortedCards.filter((card) => {
+    const handName = "Straight";
+    const score = 400 + (handData.seqMaxValue / 14) * 99;
+    const hand = handData.sortedCards.filter((card) => {
       if (card.numericValue === handData.seqMaxValue) return true;
       if (card.numericValue === handData.seqMaxValue - 1) return true;
       if (card.numericValue === handData.seqMaxValue - 2) return true;
@@ -441,9 +441,9 @@ export function checkStraight(handData: HandData) {
     handData.seqMaxValue === 5 &&
     handData.maxCardValue === 14
   ) {
-    let handName = "Straight";
-    let score = 400 + (5 / 14) * 99;
-    let hand = handData.sortedCards.filter((card) => {
+    const handName = "Straight";
+    const score = 400 + (5 / 14) * 99;
+    const hand = handData.sortedCards.filter((card) => {
       if (card.numericValue === 14) return true;
       if (card.numericValue === handData.seqMaxValue) return true;
       if (card.numericValue === handData.seqMaxValue - 1) return true;
@@ -460,8 +460,8 @@ export function checkThreeOfAKind(handData: HandData) {
     handData.duplicates.length === 1 &&
     handData.duplicates[0].duplicateCount === 3
   ) {
-    let handName = "Three of a Kind";
-    let score =
+    const handName = "Three of a Kind";
+    const score =
       300 +
       handData.duplicates[0].cardValue * 7 * 0.95 + // weighted at 95%
       evaluateRankByHighestCards(
@@ -472,18 +472,18 @@ export function checkThreeOfAKind(handData: HandData) {
       ) *
         0.05; // weighted at 5%
 
-    let tempTriple = handData.sortedCards.filter((card) => {
+    const tempTriple = handData.sortedCards.filter((card) => {
       if (card.numericValue === handData.duplicates[0].cardValue) {
         return true;
       }
     });
-    let tempTwo = handData.sortedCards.filter((card) => {
+    const tempTwo = handData.sortedCards.filter((card) => {
       if (card.numericValue != handData.duplicates[0].cardValue) {
         return true;
       }
     });
 
-    let hand = tempTriple.concat(tempTwo.slice(-2));
+    const hand = tempTriple.concat(tempTwo.slice(-2));
 
     return { handName, score, hand };
   }
@@ -492,8 +492,8 @@ export function checkThreeOfAKind(handData: HandData) {
 
 export function checkTwoPair(handData: HandData) {
   if (handData.duplicates.length > 1) {
-    let handName = "Two Pair";
-    let score =
+    const handName = "Two Pair";
+    const score =
       200 +
       handData.duplicates[0].cardValue * 7 * 0.85 + // weighted at 85%
       handData.duplicates[1].cardValue * 7 * 0.1 + // weighted at 10%
@@ -505,7 +505,7 @@ export function checkTwoPair(handData: HandData) {
       ) *
         0.05; // weighted at 5%
 
-    let tempPairs = handData.sortedCards.filter((card) => {
+    const tempPairs = handData.sortedCards.filter((card) => {
       if (
         card.numericValue === handData.duplicates[0].cardValue ||
         card.numericValue === handData.duplicates[1].cardValue
@@ -514,7 +514,7 @@ export function checkTwoPair(handData: HandData) {
       }
     });
 
-    let hand = tempPairs.concat(
+    const hand = tempPairs.concat(
       handData.sortedCards
         .filter((card) => {
           if (
@@ -534,8 +534,8 @@ export function checkTwoPair(handData: HandData) {
 
 export function checkPair(handData: HandData) {
   if (handData.duplicates.length > 0) {
-    let handName = "Pair";
-    let score =
+    const handName = "Pair";
+    const score =
       100 +
       handData.duplicates[0].cardValue * 7 * 0.95 + // weighted at 95%
       evaluateRankByHighestCards(
@@ -546,19 +546,19 @@ export function checkPair(handData: HandData) {
       ) *
         0.05; // weighted at 5%
 
-    let temp = handData.sortedCards.filter((card) => {
+    const temp = handData.sortedCards.filter((card) => {
       if (card.numericValue === handData.duplicates[0].cardValue) {
         return true;
       }
     });
 
-    let temp2 = handData.sortedCards.filter((card) => {
+    const temp2 = handData.sortedCards.filter((card) => {
       if (card.numericValue != handData.duplicates[0].cardValue) {
         return true;
       }
     });
 
-    let hand = temp.concat(temp2.slice(-3));
+    const hand = temp.concat(temp2.slice(-3));
 
     return { handName, score, hand };
   }

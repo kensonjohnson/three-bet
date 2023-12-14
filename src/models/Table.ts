@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Player } from "./Player.js";
 import { Deck } from "./Deck.js";
 import { Card } from "./Card.js";
-import { checkPlayerHand } from "./Evaluate.js";
+// import { checkPlayerHand } from "./Evaluate.js";
 
 export class Table {
   readonly id: string;
