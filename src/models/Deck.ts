@@ -24,6 +24,7 @@ export class Deck {
   constructor() {
     this.cards = freshDeck();
     this.discardPile = [];
+    this.shuffle();
   }
 
   get deckSize() {
@@ -107,7 +108,10 @@ export class Deck {
     return this.cards.splice(0, numberOfCards);
   }
   createNewDeck() {
-    this.cards = freshDeck();
+    const newCards = freshDeck();
+    this.cards.length = 0;
+    this.cards.push(...newCards);
+    this.shuffle();
   }
 }
 
