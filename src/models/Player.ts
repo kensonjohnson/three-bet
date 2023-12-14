@@ -43,4 +43,11 @@ export class Player {
   showHand() {
     return this.cards;
   }
+
+  get info() {
+    return {
+      id: this.id,
+      chips: this.chips.toString(),
+    };
+  }
 }
