@@ -143,18 +143,6 @@ export function analyzeHand(playerCards: Card[], tableCards: Card[]) {
     return a.numericValue - b.numericValue;
   });
 
-  //for testing specific hands only
-  // const testHand = [
-  //   new Card("H", "2"),
-  //   new Card("H", "6"),
-  //   new Card("H", "7"),
-  //   new Card("H", "8"),
-  //   new Card("H", "9"),
-  //   new Card("H", "T"),
-  //   new Card("H", "A"),
-  // ];
-  // sortedCards = testHand;
-
   //grab the highest value represented
   maxCardValue = sortedCards[sortedCards.length - 1].numericValue;
   for (let i = 0; i < sortedCards.length - 1; i++) {
