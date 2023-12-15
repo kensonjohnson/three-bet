@@ -1,4 +1,4 @@
-import { Card } from "./Card.js";
+import { Card, NumericValue } from "./Card.js";
 
 const SPADES = "S";
 const CLUBS = "C";
@@ -13,12 +13,12 @@ type HandStats = {
 
 class HandData {
   stats: HandStats;
-  duplicates: { duplicateCount: number; cardValue: number }[];
+  duplicates: { duplicateCount: number; cardValue: NumericValue }[];
   sortedSuits: Card[][];
   sortedCards: Card[];
   constructor(
     stats: HandStats,
-    duplicates: { duplicateCount: number; cardValue: number }[],
+    duplicates: { duplicateCount: number; cardValue: NumericValue }[],
     sortedSuits: Card[][],
     sortedCards: Card[]
   ) {
@@ -129,13 +129,13 @@ export function analyzeHand(playerCards: Card[], tableCards: Card[]) {
   let seqCountMax = 1;
   let maxCardValue = -1;
   let seqMaxValue = -1;
-  let cardValue = -1;
-  let nextCardValue = -1;
   const duplicates = [];
   const sortedSuits = [];
   const sortedCards = playerCards.concat(tableCards).sort((a, b) => {
     return a.numericValue - b.numericValue;
   });
+  let cardValue: NumericValue = sortedCards[0].numericValue;
+  let nextCardValue: NumericValue = sortedCards[0].numericValue;
 
   //grab the highest value represented
   maxCardValue = sortedCards[sortedCards.length - 1].numericValue;
