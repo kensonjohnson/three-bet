@@ -12,15 +12,16 @@ const NUMERIC_VALUE_MAP = {
   Q: 12,
   K: 13,
   A: 14,
-};
+} as const;
 
 export type Suit = "S" | "C" | "D" | "H";
 export type FaceValue = keyof typeof NUMERIC_VALUE_MAP;
+export type NumericValue = (typeof NUMERIC_VALUE_MAP)[FaceValue];
 
 export class Card {
   suit: Suit;
   faceValue: FaceValue;
-  numericValue: number;
+  numericValue: (typeof NUMERIC_VALUE_MAP)[FaceValue];
 
   constructor(suit: Suit, faceValue: FaceValue) {
     this.suit = suit;
