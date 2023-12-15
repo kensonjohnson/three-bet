@@ -12,10 +12,7 @@ class HandData {
   maxCardValue: number;
   seqMaxValue: number;
   duplicates: { duplicateCount: number; cardValue: number }[];
-  sortedSpades: Card[];
-  sortedClubs: Card[];
-  sortedDiamonds: Card[];
-  sortedHearts: Card[];
+  sortedSuits: Card[][];
   sortedCards: Card[];
   constructor(
     duplicateCount: number,
@@ -24,10 +21,7 @@ class HandData {
     maxCardValue: number,
     seqMaxValue: number,
     duplicates: { duplicateCount: number; cardValue: number }[],
-    sortedSpades: Card[],
-    sortedClubs: Card[],
-    sortedDiamonds: Card[],
-    sortedHearts: Card[],
+    sortedSuits: Card[][],
     sortedCards: Card[]
   ) {
     this.duplicateCount = duplicateCount;
@@ -36,10 +30,7 @@ class HandData {
     this.maxCardValue = maxCardValue;
     this.seqMaxValue = seqMaxValue;
     this.duplicates = duplicates;
-    this.sortedSpades = sortedSpades;
-    this.sortedClubs = sortedClubs;
-    this.sortedDiamonds = sortedDiamonds;
-    this.sortedHearts = sortedHearts;
+    this.sortedSuits = sortedSuits;
     this.sortedCards = sortedCards;
   }
 }
@@ -147,6 +138,7 @@ export function analyzeHand(playerCards: Card[], tableCards: Card[]) {
   let cardValue = -1;
   let nextCardValue = -1;
   const duplicates = [];
+  const sortedSuits = [];
   const sortedCards = playerCards.concat(tableCards).sort((a, b) => {
     return a.numericValue - b.numericValue;
   });
@@ -206,21 +198,10 @@ export function analyzeHand(playerCards: Card[], tableCards: Card[]) {
     return b.duplicateCount - a.duplicateCount;
   });
 
-  const sortedSpades = sortedCards.filter((card) => {
-    if (card.suit === SPADES) return true;
-  });
-
-  const sortedClubs = sortedCards.filter((card) => {
-    if (card.suit === CLUBS) return true;
-  });
-
-  const sortedDiamonds = sortedCards.filter((card) => {
-    if (card.suit === DIAMONDS) return true;
-  });
-
-  const sortedHearts = sortedCards.filter((card) => {
-    if (card.suit === HEARTS) return true;
-  });
+  sortedSuits.push(sortedCards.filter((card) => card.suit === SPADES));
+  sortedSuits.push(sortedCards.filter((card) => card.suit === CLUBS));
+  sortedSuits.push(sortedCards.filter((card) => card.suit === DIAMONDS));
+  sortedSuits.push(sortedCards.filter((card) => card.suit === HEARTS));
 
   return new HandData(
     duplicateCount,
@@ -229,23 +210,13 @@ export function analyzeHand(playerCards: Card[], tableCards: Card[]) {
     maxCardValue,
     seqMaxValue,
     duplicates,
-    sortedSpades,
-    sortedClubs,
-    sortedDiamonds,
-    sortedHearts,
+    sortedSuits,
     sortedCards
   );
 }
 
 export function checkRoyalFlush(handData: HandData) {
-  const suits = [
-    handData.sortedSpades,
-    handData.sortedClubs,
-    handData.sortedDiamonds,
-    handData.sortedHearts,
-  ];
-
-  for (const suit of suits) {
+  for (const suit of handData.sortedSuits) {
     if (royalFlushHelper(suit)) {
       return {
         handName: "Royal Flush",
@@ -272,14 +243,7 @@ export function royalFlushHelper(suitedCards: Card[]) {
 }
 
 export function checkStraightFlush(handData: HandData) {
-  const suits = [
-    handData.sortedSpades,
-    handData.sortedClubs,
-    handData.sortedDiamonds,
-    handData.sortedHearts,
-  ];
-
-  for (const suit of suits) {
+  for (const suit of handData.sortedSuits) {
     if (suit.length < 5) continue;
     const results = straightFlushHelper(suit);
     if (results != null) {
@@ -404,14 +368,7 @@ export function checkFullHouse(handData: HandData) {
 }
 
 export function checkFlush(handData: HandData) {
-  const suits = [
-    handData.sortedSpades,
-    handData.sortedClubs,
-    handData.sortedDiamonds,
-    handData.sortedHearts,
-  ];
-
-  for (const suit of suits) {
+  for (const suit of handData.sortedSuits) {
     if (suit.length > 4) {
       const handName = "Flush";
       const score = 500 + evaluateRankByHighestCards(suit);
