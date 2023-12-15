@@ -184,12 +184,9 @@ export function analyzeHand(playerCards: Card[], tableCards: Card[]) {
   sortedSuits.push(sortedCards.filter((card) => card.suit === DIAMONDS));
   sortedSuits.push(sortedCards.filter((card) => card.suit === HEARTS));
 
-  return new HandData(
-    { seqCountMax, maxCardValue, seqMaxValue },
-    duplicates,
-    sortedSuits,
-    sortedCards
-  );
+  const stats = { seqCountMax, maxCardValue, seqMaxValue };
+
+  return new HandData(stats, duplicates, sortedSuits, sortedCards);
 }
 
 export function checkRoyalFlush(handData: HandData) {
