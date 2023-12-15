@@ -164,7 +164,7 @@ test("Analyze Hand", () => {
   const handData = analyzeHand(testPlayerHand, testTableCards);
   expect(handData).not.toBeNull;
   expect(handData.duplicates).toEqual([]); // The test hand has no duplicates.
-  expect(handData.seqCountMax).toBe(5); // The test hand has exactly 5 cards that appear in sequential order
+  expect(handData.stats.seqCountMax).toBe(5); // The test hand has exactly 5 cards that appear in sequential order
 });
 
 test("Analyze Hand 2", () => {
@@ -178,7 +178,7 @@ test("Analyze Hand 2", () => {
   ];
   const handData = analyzeHand(testPlayerHand, testTableCards);
   expect(handData).not.toBeNull;
-  expect(handData.seqCountMax).toBe(3); // The test hand has exactly 3 cards that appear in sequential order
+  expect(handData.stats.seqCountMax).toBe(3); // The test hand has exactly 3 cards that appear in sequential order
   expect(handData.duplicates).toEqual([{ cardValue: 14, duplicateCount: 2 }]); // The test hand has no duplicates.
 });
 
