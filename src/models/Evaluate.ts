@@ -1,45 +1,30 @@
-import { Card } from "./Card.js";
+import { Card, NumericValue } from "./Card.js";
 
 const SPADES = "S";
 const CLUBS = "C";
 const DIAMONDS = "D";
 const HEARTS = "H";
 
-class HandData {
-  duplicateCount: number;
-  seqCount: number;
+type HandStats = {
   seqCountMax: number;
   maxCardValue: number;
   seqMaxValue: number;
-  duplicates: { duplicateCount: number; cardValue: number }[];
-  sortedSpades: Card[];
-  sortedClubs: Card[];
-  sortedDiamonds: Card[];
-  sortedHearts: Card[];
+};
+
+class HandData {
+  stats: HandStats;
+  duplicates: { duplicateCount: number; cardValue: NumericValue }[];
+  sortedSuits: Card[][];
   sortedCards: Card[];
   constructor(
-    duplicateCount: number,
-    seqCount: number,
-    seqCountMax: number,
-    maxCardValue: number,
-    seqMaxValue: number,
-    duplicates: { duplicateCount: number; cardValue: number }[],
-    sortedSpades: Card[],
-    sortedClubs: Card[],
-    sortedDiamonds: Card[],
-    sortedHearts: Card[],
+    stats: HandStats,
+    duplicates: { duplicateCount: number; cardValue: NumericValue }[],
+    sortedSuits: Card[][],
     sortedCards: Card[]
   ) {
-    this.duplicateCount = duplicateCount;
-    this.seqCount = seqCount;
-    this.seqCountMax = seqCountMax;
-    this.maxCardValue = maxCardValue;
-    this.seqMaxValue = seqMaxValue;
+    this.stats = stats;
     this.duplicates = duplicates;
-    this.sortedSpades = sortedSpades;
-    this.sortedClubs = sortedClubs;
-    this.sortedDiamonds = sortedDiamonds;
-    this.sortedHearts = sortedHearts;
+    this.sortedSuits = sortedSuits;
     this.sortedCards = sortedCards;
   }
 }
@@ -48,10 +33,10 @@ type Results = {
   handName: string;
   score: number;
   hand: Card[];
-} | null;
+};
 
 export function checkPlayerHand(playerCards: Card[], tableCards: Card[]) {
-  let results: Results = null;
+  let results: Results | null = null;
 
   const handData = analyzeHand(playerCards, tableCards);
 
@@ -144,24 +129,13 @@ export function analyzeHand(playerCards: Card[], tableCards: Card[]) {
   let seqCountMax = 1;
   let maxCardValue = -1;
   let seqMaxValue = -1;
-  let cardValue = -1;
-  let nextCardValue = -1;
   const duplicates = [];
+  const sortedSuits = [];
   const sortedCards = playerCards.concat(tableCards).sort((a, b) => {
     return a.numericValue - b.numericValue;
   });
-
-  //for testing specific hands only
-  // const testHand = [
-  //   new Card("H", "2"),
-  //   new Card("H", "6"),
-  //   new Card("H", "7"),
-  //   new Card("H", "8"),
-  //   new Card("H", "9"),
-  //   new Card("H", "T"),
-  //   new Card("H", "A"),
-  // ];
-  // sortedCards = testHand;
+  let cardValue: NumericValue = sortedCards[0].numericValue;
+  let nextCardValue: NumericValue = sortedCards[0].numericValue;
 
   //grab the highest value represented
   maxCardValue = sortedCards[sortedCards.length - 1].numericValue;
@@ -200,52 +174,23 @@ export function analyzeHand(playerCards: Card[], tableCards: Card[]) {
 
   // Finally, to make the matches easier to work with, we will move the highest number of matches to the front of the array
   duplicates.sort((a, b) => {
-    if (b.duplicateCount === a.duplicateCount) {
-      return b.cardValue - a.cardValue;
-    }
-    return b.duplicateCount - a.duplicateCount;
+    return b.duplicateCount === a.duplicateCount
+      ? b.cardValue - a.cardValue
+      : b.duplicateCount - a.duplicateCount;
   });
 
-  const sortedSpades = sortedCards.filter((card) => {
-    if (card.suit === SPADES) return true;
-  });
+  sortedSuits.push(sortedCards.filter((card) => card.suit === SPADES));
+  sortedSuits.push(sortedCards.filter((card) => card.suit === CLUBS));
+  sortedSuits.push(sortedCards.filter((card) => card.suit === DIAMONDS));
+  sortedSuits.push(sortedCards.filter((card) => card.suit === HEARTS));
 
-  const sortedClubs = sortedCards.filter((card) => {
-    if (card.suit === CLUBS) return true;
-  });
+  const stats = { seqCountMax, maxCardValue, seqMaxValue };
 
-  const sortedDiamonds = sortedCards.filter((card) => {
-    if (card.suit === DIAMONDS) return true;
-  });
-
-  const sortedHearts = sortedCards.filter((card) => {
-    if (card.suit === HEARTS) return true;
-  });
-
-  return new HandData(
-    duplicateCount,
-    seqCount,
-    seqCountMax,
-    maxCardValue,
-    seqMaxValue,
-    duplicates,
-    sortedSpades,
-    sortedClubs,
-    sortedDiamonds,
-    sortedHearts,
-    sortedCards
-  );
+  return new HandData(stats, duplicates, sortedSuits, sortedCards);
 }
 
 export function checkRoyalFlush(handData: HandData) {
-  const suits = [
-    handData.sortedSpades,
-    handData.sortedClubs,
-    handData.sortedDiamonds,
-    handData.sortedHearts,
-  ];
-
-  for (const suit of suits) {
+  for (const suit of handData.sortedSuits) {
     if (royalFlushHelper(suit)) {
       return {
         handName: "Royal Flush",
@@ -272,14 +217,7 @@ export function royalFlushHelper(suitedCards: Card[]) {
 }
 
 export function checkStraightFlush(handData: HandData) {
-  const suits = [
-    handData.sortedSpades,
-    handData.sortedClubs,
-    handData.sortedDiamonds,
-    handData.sortedHearts,
-  ];
-
-  for (const suit of suits) {
+  for (const suit of handData.sortedSuits) {
     if (suit.length < 5) continue;
     const results = straightFlushHelper(suit);
     if (results != null) {
@@ -404,14 +342,7 @@ export function checkFullHouse(handData: HandData) {
 }
 
 export function checkFlush(handData: HandData) {
-  const suits = [
-    handData.sortedSpades,
-    handData.sortedClubs,
-    handData.sortedDiamonds,
-    handData.sortedHearts,
-  ];
-
-  for (const suit of suits) {
+  for (const suit of handData.sortedSuits) {
     if (suit.length > 4) {
       const handName = "Flush";
       const score = 500 + evaluateRankByHighestCards(suit);
@@ -423,32 +354,32 @@ export function checkFlush(handData: HandData) {
 }
 
 export function checkStraight(handData: HandData) {
-  if (handData.seqCountMax >= 5) {
+  if (handData.stats.seqCountMax >= 5) {
     const handName = "Straight";
-    const score = 400 + (handData.seqMaxValue / 14) * 99;
+    const score = 400 + (handData.stats.seqMaxValue / 14) * 99;
     const hand = handData.sortedCards.filter((card) => {
-      if (card.numericValue === handData.seqMaxValue) return true;
-      if (card.numericValue === handData.seqMaxValue - 1) return true;
-      if (card.numericValue === handData.seqMaxValue - 2) return true;
-      if (card.numericValue === handData.seqMaxValue - 3) return true;
-      if (card.numericValue === handData.seqMaxValue - 4) return true;
+      if (card.numericValue === handData.stats.seqMaxValue) return true;
+      if (card.numericValue === handData.stats.seqMaxValue - 1) return true;
+      if (card.numericValue === handData.stats.seqMaxValue - 2) return true;
+      if (card.numericValue === handData.stats.seqMaxValue - 3) return true;
+      if (card.numericValue === handData.stats.seqMaxValue - 4) return true;
     });
     return { handName, score, hand };
   }
   // Edge case: if the straight is A,2,3,4,5 we need to recognize that using seqCountMax == 4, seqMaxValue == 5, and at least one Ace in the handName.
   if (
-    handData.seqCountMax === 4 &&
-    handData.seqMaxValue === 5 &&
-    handData.maxCardValue === 14
+    handData.stats.seqCountMax === 4 &&
+    handData.stats.seqMaxValue === 5 &&
+    handData.stats.maxCardValue === 14
   ) {
     const handName = "Straight";
     const score = 400 + (5 / 14) * 99;
     const hand = handData.sortedCards.filter((card) => {
       if (card.numericValue === 14) return true;
-      if (card.numericValue === handData.seqMaxValue) return true;
-      if (card.numericValue === handData.seqMaxValue - 1) return true;
-      if (card.numericValue === handData.seqMaxValue - 2) return true;
-      if (card.numericValue === handData.seqMaxValue - 3) return true;
+      if (card.numericValue === handData.stats.seqMaxValue) return true;
+      if (card.numericValue === handData.stats.seqMaxValue - 1) return true;
+      if (card.numericValue === handData.stats.seqMaxValue - 2) return true;
+      if (card.numericValue === handData.stats.seqMaxValue - 3) return true;
     });
     return { handName, score, hand };
   }
