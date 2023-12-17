@@ -138,7 +138,7 @@ export function analyzeHand(playerCards: Card[], tableCards: Card[]) {
   let nextCardValue: NumericValue = sortedCards[0].numericValue;
 
   //grab the highest value represented
-  maxCardValue = sortedCards[sortedCards.length - 1].numericValue;
+  maxCardValue = sortedCards.at(-1)!.numericValue;
   for (let i = 0; i < sortedCards.length - 1; i++) {
     cardValue = sortedCards[i].numericValue;
     nextCardValue = sortedCards[i + 1].numericValue;
@@ -206,11 +206,11 @@ export function checkRoyalFlush(handData: HandData) {
 export function royalFlushHelper(suitedCards: Card[]) {
   if (suitedCards.length < 5) return false;
   if (
-    suitedCards[suitedCards.length - 1].numericValue == 14 &&
-    suitedCards[suitedCards.length - 2].numericValue == 13 &&
-    suitedCards[suitedCards.length - 3].numericValue == 12 &&
-    suitedCards[suitedCards.length - 4].numericValue == 11 &&
-    suitedCards[suitedCards.length - 5].numericValue == 10
+    suitedCards.at(-1)!.numericValue == 14 &&
+    suitedCards.at(-2)!.numericValue == 13 &&
+    suitedCards.at(-3)!.numericValue == 12 &&
+    suitedCards.at(-4)!.numericValue == 11 &&
+    suitedCards.at(-5)!.numericValue == 10
   ) {
     return true;
   }
@@ -267,11 +267,9 @@ export function straightFlushHelper(suitedCards: Card[]) {
   else if (
     counterMax === 4 &&
     highestValue === 5 &&
-    suitedCards[suitedCards.length - 1].numericValue === 14
+    suitedCards.at(-1)!.numericValue === 14
   ) {
-    const hand = suitedCards
-      .slice(0, 4)
-      .concat(suitedCards[suitedCards.length - 1]);
+    const hand = suitedCards.slice(0, 4).concat(suitedCards.at(-1)!);
     return { highestValue, hand };
   }
   return null;
