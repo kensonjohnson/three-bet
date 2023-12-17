@@ -31,18 +31,6 @@ export class Deck {
     return this.cards.length;
   }
 
-  // Precache all of the images for the deck. doesn't work in every browser
-  preloadImages() {
-    const precacheImages: string[] = [];
-    SUITS.forEach((suit) => {
-      FACE_VALUES.forEach((value) => {
-        const img = (new Image().src = `images/${value}${suit}.svg`);
-        precacheImages.push(img);
-      });
-    });
-    return precacheImages;
-  }
-
   // rather than use Array.sort(), which is predictable even when using Math.random(),
   // we will create our own random sorting algorithm
   shuffle() {
@@ -64,7 +52,7 @@ export class Deck {
     }
 
     // Burn a card
-    this.discardPile.push(this.cards.shift()!);
+    this.discardPile.push(this.cards.pop()!);
     return true;
   }
 
@@ -75,7 +63,7 @@ export class Deck {
     }
 
     // Return one card, removing it from the deck
-    return this.cards.shift();
+    return this.cards.pop();
   }
 
   dealTwoCards() {
@@ -85,7 +73,7 @@ export class Deck {
     }
 
     // Return two cards, removing them from the deck
-    return this.cards.splice(0, 2);
+    return this.cards.splice(-2);
   }
 
   dealThreeCards() {
@@ -95,7 +83,7 @@ export class Deck {
     }
 
     // Return three cards, removing them from the deck
-    return this.cards.splice(0, 3);
+    return this.cards.splice(-3);
   }
 
   dealManyCards(numberOfCards: number) {
@@ -105,7 +93,7 @@ export class Deck {
     }
 
     // Return numberOfCards cards, removing them from the deck
-    return this.cards.splice(0, numberOfCards);
+    return this.cards.splice(-numberOfCards);
   }
   createNewDeck() {
     const newCards = freshDeck();
