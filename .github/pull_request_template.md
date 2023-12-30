@@ -34,6 +34,9 @@
 
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
+- [ ] Optimization (non-breaking change which improves performance)
+- [ ] Documentation (non-breaking change which improves documentation)
+- [ ] Refactoring / Cleanup (non-breaking change which does not add functionality or fix issues)
 - [ ] Breaking change (fix or feature that would cause existing functionality to change)
 
 ## Checklist:
